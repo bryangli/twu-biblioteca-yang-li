@@ -8,6 +8,12 @@ public class BibliotecaApp {
     private static String currentSection;
     private static BibliotecaSection bookSection = new BookSection();
     private static BibliotecaSection movieSection = new MovieSection();
+    private static UserDatabase userDatabase = new UserDatabase();
+
+    private static String readInput() {
+        Scanner in = new Scanner(System.in);
+        return in.nextLine();
+    }
 
     private static void takeAction(String command, BibliotecaSection section) {
         // Exit the program if customers want to
@@ -34,35 +40,65 @@ public class BibliotecaApp {
         // if option is not available, re-enter an option
         if (!availableOption) {
             System.out.print("\nPlease enter a valid option: ");
-            Scanner option = new Scanner(System.in);
-            String newCommand = option.nextLine();
-            takeAction(newCommand, section);
+            takeAction(readInput(), section);
         } else {
             // use if statements to take care of actions related to different menu options
             if (command.toLowerCase().startsWith("list")) {
                 section.display();
             } else if (command.toLowerCase().startsWith("check")) {
-                System.out.print("\nPlease enter the item you want to check out: ");
-                Scanner checkOutName = new Scanner(System.in);
-                String stockName = checkOutName.nextLine();
-                section.checkOut(stockName);
+                System.out.println("\nPlease log in!");
+                User loggedIn = logIn();
+                if (loggedIn != null) {
+                    System.out.println("Welcome " + loggedIn.getName() + "!");
+                    System.out.println("Your email address: " + loggedIn.getEmail());
+                    System.out.println("Your phone number: " + loggedIn.getPhone());
+                    System.out.print("\nPlease enter the item you want to check out: ");
+                    section.checkOut(readInput());
+                }
             } else if (command.toLowerCase().startsWith("return")) {
-                System.out.print("\nPlease enter the item you want to return: ");
-                Scanner returnName = new Scanner(System.in);
-                String stockName = returnName.nextLine();
-                section.returning(stockName);
+                System.out.println("\nPlease log in!");
+                User loggedIn = logIn();
+                if (loggedIn != null) {
+                    System.out.println("Welcome " + loggedIn.getName() + "!");
+                    System.out.println("Your email address: " + loggedIn.getEmail());
+                    System.out.println("Your phone number: " + loggedIn.getPhone());
+                    System.out.print("\nPlease enter the item you want to return: ");
+                    section.returning(readInput());
+                }
             } else {
                 currentSection = currentSection.equals("Books") ? "Movies" : "Books";
                 displayMenu(currentSection);
             }
             System.out.print("\nNext you want to: ");
-            Scanner nextCommand = new Scanner(System.in);
-            String next = nextCommand.nextLine();
             if (currentSection.equals("Books")) {
-                takeAction(next, bookSection);
+                takeAction(readInput(), bookSection);
             } else {
-                takeAction(next, movieSection);
+                takeAction(readInput(), movieSection);
             }
+        }
+    }
+
+    private static User logIn() {
+        int failTimes = 0;
+        System.out.print("UserID: ");
+        String userId = readInput();
+        System.out.print("Password: ");
+        String password = readInput();
+        User logIn = userDatabase.authentication(userId, password);
+        while (failTimes < 2 && logIn == null) {
+            failTimes++;
+            System.out.println("Your userID/password is incorrect. Please try again. You have "
+                    + (3 - failTimes) + " attempts left");
+            System.out.print("UserID: ");
+            userId = readInput();
+            System.out.print("Password: ");
+            password = readInput();
+            logIn = userDatabase.authentication(userId, password);
+        }
+        if (logIn == null) {
+            return null;
+        } else {
+            return logIn;
         }
     }
 
@@ -74,9 +110,7 @@ public class BibliotecaApp {
             currentSection = "Movies";
         } else {
             System.out.print("\nPlease enter a valid section name: ");
-            Scanner sectionIn = new Scanner(System.in);
-            String sectionName = sectionIn.nextLine();
-            displayMenu(sectionName);
+            displayMenu(readInput());
         }
         System.out.println("\nHere are some options you can explore in this section: ");
         if (currentSection.equals("Books")) {
@@ -96,17 +130,13 @@ public class BibliotecaApp {
         System.out.println("You want to see BOOKS or MOVIES?");
 
         // Display the options for different sections
-        Scanner in = new Scanner(System.in);
-        String sectionName = in.nextLine();
-        displayMenu(sectionName);
+        displayMenu(readInput());
 
         System.out.print("\nPlease choose an option: ");
-        Scanner option = new Scanner(System.in);
-        String command = option.nextLine();
         if (currentSection.equals("Books")) {
-            takeAction(command, bookSection);
+            takeAction(readInput(), bookSection);
         } else {
-            takeAction(command, movieSection);
+            takeAction(readInput(), movieSection);
         };
     }
 }
