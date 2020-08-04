@@ -7,13 +7,24 @@ import java.util.Scanner;
 public class BibliotecaApp {
     private static List<Book> books = new ArrayList<>();
     private static List<Book> checkedOutBooks =  new ArrayList<>();
-    private static String[] options = {"List of Books", "Check Out", "Return", "EXIT"};
+    private static List<Movie> movies = new ArrayList<>();
+    private static List<Movie> checkedOutMovies =  new ArrayList<>();
+    private static String[] options = {"List of Books", "List of Movies", "Check Out", "Return", "EXIT"};
 
     private static void loadBooks() {
         // An example of three books
         books.add(new Book("Little Prince", 1943, "Antoine de Saint-Exupery"));
         books.add(new Book("The Great Gatsby", 1925, "F. Scott Fitzgerald"));
         books.add(new Book("Pride and Prejudice", 1813, "Jane Austen"));
+    }
+
+    private static void loadMovies() {
+        // An example of several films
+        movies.add(new Movie("Parasite", 2019, "Bong Joon-ho", 8.6));
+        movies.add(new Movie("Booksmart", 2019, "Olivia Wilde", 7.2));
+        movies.add(new Movie("Marriage Story", 2019, "Noah Baumbach", 8.0));
+        movies.add(new Movie("The Intern", 2015, "Nancy Meyers", 7.1));
+        movies.add(new Movie("Love Actually", 2003, "Richard Curtis", 7.6));
     }
 
     private static void displayBooks() {
@@ -30,6 +41,24 @@ public class BibliotecaApp {
             System.out.println(currentBook.getPublicationYear() + " | " +
                     currentBook.getTitle() + " ".repeat(maxTitleLen - currentBook.getTitle().length()) + " | " +
                     currentBook.getAuthor());
+        }
+    }
+
+    private static void displayMovies() {
+        // Calculate the longest movie name for formatting purposes
+        int maxTitleLen = 0, maxDirectorLen = 0;
+        for (Movie m: movies) {
+            maxTitleLen = m.getName().length() > maxTitleLen ? m.getName().length() : maxTitleLen;
+            maxDirectorLen = m.getDirector().length() > maxDirectorLen ? m.getDirector().length() : maxDirectorLen;
+        }
+
+        // Print out a list of books
+        System.out.println("Below are the movies available here at Biblioteca:\n");
+        for (Movie m: movies) {
+            System.out.println(m.getYearMade() + " | " +
+                    m.getName() + " ".repeat(maxTitleLen - m.getName().length()) + " | " +
+                    m.getDirector() + " ".repeat(maxDirectorLen - m.getDirector().length()) + " | " +
+                    m.getMovieRating());
         }
     }
 
@@ -76,6 +105,8 @@ public class BibliotecaApp {
         if (availableOption) {
             if (command.toLowerCase().equals("list of books")) {
                 displayBooks();
+            } else if (command.toLowerCase().equals("list of movies")) {
+                displayMovies();
             } else if (command.toLowerCase().equals("check out")) {
                 System.out.print("\nWhich book would you like to check out? ");
                 Scanner inBook = new Scanner(System.in);
@@ -102,6 +133,7 @@ public class BibliotecaApp {
     public static void main(String[] args) {
         // Welcome message and show a list of options that a customer can take
         loadBooks();
+        loadMovies();
         System.out.println("\nWelcome to Biblioteca. Your one-stop-shop for great book titles in Bangalore!\n");
         System.out.println("Here are some options to explore:");
         for (String s: options) {
