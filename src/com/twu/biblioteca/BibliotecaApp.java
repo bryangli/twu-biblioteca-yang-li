@@ -1,151 +1,112 @@
 package com.twu.biblioteca;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class BibliotecaApp {
-    private static List<Book> books = new ArrayList<>();
-    private static List<Book> checkedOutBooks =  new ArrayList<>();
-    private static List<Movie> movies = new ArrayList<>();
-    private static List<Movie> checkedOutMovies =  new ArrayList<>();
-    private static String[] options = {"List of Books", "List of Movies", "Check Out", "Return", "EXIT"};
+    private static String[] bookOptions = {"List of Books", "Check Out", "Return", "To Movie Section", "EXIT"};
+    private static String[] movieOptions = {"List of Movies", "Check Out", "Return", "To Book Section", "EXIT"};
+    private static String currentSection;
+    private static BibliotecaSection bookSection = new BookSection();
+    private static BibliotecaSection movieSection = new MovieSection();
 
-    private static void loadBooks() {
-        // An example of three books
-        books.add(new Book("Little Prince", 1943, "Antoine de Saint-Exupery"));
-        books.add(new Book("The Great Gatsby", 1925, "F. Scott Fitzgerald"));
-        books.add(new Book("Pride and Prejudice", 1813, "Jane Austen"));
-    }
+    private static void takeAction(String command, BibliotecaSection section) {
+        // Exit the program if customers want to
+        if (command.toLowerCase().equals("exit")) { return; }
 
-    private static void loadMovies() {
-        // An example of several films
-        movies.add(new Movie("Parasite", 2019, "Bong Joon-ho", 8.6));
-        movies.add(new Movie("Booksmart", 2019, "Olivia Wilde", 7.2));
-        movies.add(new Movie("Marriage Story", 2019, "Noah Baumbach", 8.0));
-        movies.add(new Movie("The Intern", 2015, "Nancy Meyers", 7.1));
-        movies.add(new Movie("Love Actually", 2003, "Richard Curtis", 7.6));
-    }
-
-    private static void displayBooks() {
-        // Calculate the longest book name for formatting purposes
-        int maxTitleLen = 0;
-        for (int i = 0; i < books.size(); i++) {
-            maxTitleLen = books.get(i).getTitle().length() > maxTitleLen ? books.get(i).getTitle().length() : maxTitleLen;
-        }
-
-        // Print out a list of books
-        System.out.println("Below are the books available here at Biblioteca:\n");
-        for (int i = 0; i < books.size(); i++) {
-            Book currentBook = books.get(i);
-            System.out.println(currentBook.getPublicationYear() + " | " +
-                    currentBook.getTitle() + " ".repeat(maxTitleLen - currentBook.getTitle().length()) + " | " +
-                    currentBook.getAuthor());
-        }
-    }
-
-    private static void displayMovies() {
-        // Calculate the longest movie name for formatting purposes
-        int maxTitleLen = 0, maxDirectorLen = 0;
-        for (Movie m: movies) {
-            maxTitleLen = m.getName().length() > maxTitleLen ? m.getName().length() : maxTitleLen;
-            maxDirectorLen = m.getDirector().length() > maxDirectorLen ? m.getDirector().length() : maxDirectorLen;
-        }
-
-        // Print out a list of books
-        System.out.println("Below are the movies available here at Biblioteca:\n");
-        for (Movie m: movies) {
-            System.out.println(m.getYearMade() + " | " +
-                    m.getName() + " ".repeat(maxTitleLen - m.getName().length()) + " | " +
-                    m.getDirector() + " ".repeat(maxDirectorLen - m.getDirector().length()) + " | " +
-                    m.getMovieRating());
-        }
-    }
-
-    private static void checkOut(String bookName) {
-        for (Book b: books) {
-            if (b.getTitle().toLowerCase().equals(bookName.toLowerCase())) {
-                checkedOutBooks.add(b);
-                books.remove(b);
-                System.out.println("Thank you! Enjoy the book :)");
-                return;
-            }
-        }
-        System.out.println("Sorry, that book is not available :(");
-    }
-
-    private static void returnBook(String bookName) {
-        for (Book b: checkedOutBooks) {
-            if (b.getTitle().toLowerCase().equals(bookName.toLowerCase())) {
-                books.add(b);
-                checkedOutBooks.remove(b);
-                System.out.println("Thank you for returning the book :)");
-                return;
-            }
-        }
-        System.out.println("That is not a valid book to return :(");
-    }
-
-    private static void takeAction(String command) {
-        // Check if the actions that customers enter exist in the action library
+        // Check if entered option exists in corresponding section
         boolean availableOption = false;
-
-        if (command.toLowerCase().equals("exit")) {
-            return;
-        }
-
-        for (String s: options) {
-            if (s.toLowerCase().equals(command.toLowerCase())) {
-                availableOption = true;
-                break;
+        if (currentSection.equals("Books")) {
+            for (String s: bookOptions) {
+                if (command.toLowerCase().equals(s.toLowerCase())) {
+                    availableOption = true;
+                    break;
+                }
             }
-        }
-
-        // Take corresponding actions for the messages that customers enter; if the action does not exist, re-enter
-        if (availableOption) {
-            if (command.toLowerCase().equals("list of books")) {
-                displayBooks();
-            } else if (command.toLowerCase().equals("list of movies")) {
-                displayMovies();
-            } else if (command.toLowerCase().equals("check out")) {
-                System.out.print("\nWhich book would you like to check out? ");
-                Scanner inBook = new Scanner(System.in);
-                String bookName = inBook.nextLine();
-                checkOut(bookName);
-            } else if (command.toLowerCase().equals("return")) {
-                System.out.print("\nPlease enter the book you are returning: ");
-                Scanner inBook = new Scanner(System.in);
-                String bookName = inBook.nextLine();
-                returnBook(bookName);
-            }
-            System.out.print("\nNext: ");
-            Scanner in = new Scanner(System.in);
-            String nextCommand = in.nextLine();
-            takeAction(nextCommand);
         } else {
+            for (String s: movieOptions) {
+                if (command.toLowerCase().equals(s.toLowerCase())) {
+                    availableOption = true;
+                    break;
+                }
+            }
+        }
+
+        // if option is not available, re-enter an option
+        if (!availableOption) {
             System.out.print("\nPlease enter a valid option: ");
-            Scanner in = new Scanner(System.in);
-            String nextCommand = in.nextLine();
-            takeAction(nextCommand);
+            Scanner option = new Scanner(System.in);
+            String newCommand = option.nextLine();
+            takeAction(newCommand, section);
+        } else {
+            // use if statements to take care of actions related to different menu options
+            if (command.toLowerCase().startsWith("list")) {
+                section.display();
+            } else if (command.toLowerCase().startsWith("check")) {
+                System.out.print("\nPlease enter the item you want to check out: ");
+                Scanner checkOutName = new Scanner(System.in);
+                String stockName = checkOutName.nextLine();
+                section.checkOut(stockName);
+            } else if (command.toLowerCase().startsWith("return")) {
+                System.out.print("\nPlease enter the item you want to return: ");
+                Scanner returnName = new Scanner(System.in);
+                String stockName = returnName.nextLine();
+                section.returning(stockName);
+            } else {
+                currentSection = currentSection.equals("Books") ? "Movies" : "Books";
+                displayMenu(currentSection);
+            }
+            System.out.print("\nNext you want to: ");
+            Scanner nextCommand = new Scanner(System.in);
+            String next = nextCommand.nextLine();
+            if (currentSection.equals("Books")) {
+                takeAction(next, bookSection);
+            } else {
+                takeAction(next, movieSection);
+            }
+        }
+    }
+
+    private static void displayMenu(String sectionType) {
+        // display a list of options that can be executed on selected section
+        if (sectionType.toLowerCase().equals("books")) {
+            currentSection = "Books";
+        } else if (sectionType.toLowerCase().equals("movies")) {
+            currentSection = "Movies";
+        } else {
+            System.out.print("\nPlease enter a valid section name: ");
+            Scanner sectionIn = new Scanner(System.in);
+            String sectionName = sectionIn.nextLine();
+            displayMenu(sectionName);
+        }
+        System.out.println("\nHere are some options you can explore in this section: ");
+        if (currentSection.equals("Books")) {
+            for (String s: bookOptions) {
+                System.out.println(" ".repeat(10) + s);
+            }
+        } else{
+            for (String s: movieOptions) {
+                System.out.println(" ".repeat(10) + s);
+            }
         }
     }
 
     public static void main(String[] args) {
-        // Welcome message and show a list of options that a customer can take
-        loadBooks();
-        loadMovies();
+        // Welcome message and guide customers to the right section
         System.out.println("\nWelcome to Biblioteca. Your one-stop-shop for great book titles in Bangalore!\n");
-        System.out.println("Here are some options to explore:");
-        for (String s: options) {
-            System.out.println(" ".repeat(10) + s);
-        }
+        System.out.println("You want to see BOOKS or MOVIES?");
 
-        // An input area for the customers to select what they want to do next
-        System.out.print("\nPlease enter: ");
+        // Display the options for different sections
         Scanner in = new Scanner(System.in);
+        String sectionName = in.nextLine();
+        displayMenu(sectionName);
 
-        // Read the action that customers input and take corresponding actions
-        String command = in.nextLine();
-        takeAction(command);
+        System.out.print("\nPlease choose an option: ");
+        Scanner option = new Scanner(System.in);
+        String command = option.nextLine();
+        if (currentSection.equals("Books")) {
+            takeAction(command, bookSection);
+        } else {
+            takeAction(command, movieSection);
+        };
     }
 }
