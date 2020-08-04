@@ -2,7 +2,6 @@ package com.twu.biblioteca;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class MovieSection extends BibliotecaSection{
     private static List<Movie> movies = new ArrayList<>();
@@ -64,4 +63,9 @@ public class MovieSection extends BibliotecaSection{
         }
         System.out.println("\nThat is not a valid movie to return :(");
     }
+
+    public int getMovieCount() {
+        return movies.size();
+    }
+
 }

@@ -62,4 +62,8 @@ public class BookSection extends BibliotecaSection {
         }
         System.out.println("\nThat is not a valid book to return :(");
     }
+
+    public int getBookCount() {
+        return books.size();
+    }
 }

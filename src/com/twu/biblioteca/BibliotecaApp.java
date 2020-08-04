@@ -46,6 +46,7 @@ public class BibliotecaApp {
             if (command.toLowerCase().startsWith("list")) {
                 section.display();
             } else if (command.toLowerCase().startsWith("check")) {
+                // when users choose check out/return, they will need to log in with maximum 3 attempts
                 System.out.println("\nPlease log in!");
                 User loggedIn = logIn();
                 if (loggedIn != null) {
@@ -66,9 +67,11 @@ public class BibliotecaApp {
                     section.returning(readInput());
                 }
             } else {
+                // if users want to go to the other section, corresponding menu will be displayed
                 currentSection = currentSection.equals("Books") ? "Movies" : "Books";
                 displayMenu(currentSection);
             }
+            // user will continue to give command until QUIT is given
             System.out.print("\nNext you want to: ");
             if (currentSection.equals("Books")) {
                 takeAction(readInput(), bookSection);
