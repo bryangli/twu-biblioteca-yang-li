@@ -1,7 +1,9 @@
 package com.twu.biblioteca;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class MovieSection extends BibliotecaSection{
     private static List<Movie> movies = new ArrayList<>();
@@ -32,9 +34,10 @@ public class MovieSection extends BibliotecaSection{
         System.out.println("Below are the movies available here at Biblioteca:\n");
         for (Movie m: movies) {
             System.out.println(m.getYearMade() + " | " +
-                    m.getName() + " ".repeat(maxTitleLen - m.getName().length()) + " | " +
-                    m.getDirector() + " ".repeat(maxDirectorLen - m.getDirector().length()) + " | " +
-                    m.getMovieRating());
+                    m.getName() + Collections.nCopies(maxTitleLen - m.getName().length(), " ")
+                        .stream().collect(Collectors.joining("")) + " | " +
+                    m.getDirector() + Collections.nCopies(maxDirectorLen - m.getDirector().length(), " ")
+                        .stream().collect(Collectors.joining(""))+ " | " + m.getMovieRating());
         }
     }
 

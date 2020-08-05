@@ -118,11 +118,11 @@ public class BibliotecaApp {
         System.out.println("\nHere are some options you can explore in this section: ");
         if (currentSection.equals("Books")) {
             for (String s: bookOptions) {
-                System.out.println(" ".repeat(10) + s);
+                System.out.println("          " + s);
             }
         } else{
             for (String s: movieOptions) {
-                System.out.println(" ".repeat(10) + s);
+                System.out.println("          " + s);
             }
         }
     }
@@ -140,6 +140,6 @@ public class BibliotecaApp {
             takeAction(readInput(), bookSection);
         } else {
             takeAction(readInput(), movieSection);
-        };
+        }
     }
 }

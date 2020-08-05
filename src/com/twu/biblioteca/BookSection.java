@@ -1,8 +1,10 @@
 package com.twu.biblioteca;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class BookSection extends BibliotecaSection {
     private static List<Book> books = new ArrayList<>();
@@ -32,8 +34,8 @@ public class BookSection extends BibliotecaSection {
         for (int i = 0; i < books.size(); i++) {
             Book currentBook = books.get(i);
             System.out.println(currentBook.getPublicationYear() + " | " +
-                    currentBook.getTitle() + " ".repeat(maxTitleLen - currentBook.getTitle().length()) + " | " +
-                    currentBook.getAuthor());
+                    currentBook.getTitle() + Collections.nCopies(maxTitleLen - currentBook.getTitle().length(), " ")
+                        .stream().collect(Collectors.joining("")) + " | " + currentBook.getAuthor());
         }
     }
 

@@ -1,7 +1,9 @@
 package com.twu.biblioteca;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class User {
     private String name;
@@ -17,9 +19,11 @@ public class User {
         this.password = password;
         String number = Integer.toString(num);
         if (number.length() <= 4) {
-            number = "000-" + "0".repeat(4 - number.length()) + number;
+            number = "000-" + Collections.nCopies((4 - number.length()), "0")
+                    .stream().collect(Collectors.joining("")) + number;
         } else {
-            number = "0".repeat(7 - number.length()) + number.substring(0, number.length() - 4)
+            number = Collections.nCopies(7 - number.length(), "0").stream().collect(Collectors.joining(""))
+                    + number.substring(0, number.length() - 4)
                     + "-" + number.substring(number.length() - 4);
         }
         this.userId = number;
