@@ -1,29 +1,21 @@
-Instructions to push your code to code.google.com
-=================================================
-1. Sign into GitHub and create a new repository
-        Repository name: twu-biblioteca-yourname
-        Privacy level: Public
-        Don't check "Initialize this repository with a README"
-        Add .gitignore: None
-        Add a license: Apache License 2.0
+Welcome to Biblioteca!
 
-2. Run 'git init' in the folder that was extracted from the downloaded .zip file, in order to
- initialize local repository.
+When entering the application, users will be able to go to either a movie section or a book section.
 
-3. Make a local commit.
-    $ git add -A
-    $ git commit -m “Initial commit”
+Once done selecting the section, users will be able to:
+- View list of books/movies
+- Check Out a book/movie (One at a time)
+- Return a book/movie (One at a time)
+- Re-route to the other section
+- Exit the application
 
-(Dont forget to add the hidden .idea folder, as it will make opening your project in Intellij easier.)
+If users choose to check out or return books/movies, the system will require their login information, including userIDs
+in the format of "XXX-XXXX" and passwords.
 
-4. After you are done with the local commit, you can share your code with "The World" by pushing it to your
- GitHub repository.
-    $ git remote add origin https://github.com/<YOUR-GITHUB-USERNAME>/twu-biblioteca-<YOURNAME>
-    $ git push origin master
+When users successfully log into the system, a welcome message with the user's email address and phone number will be displayed.
+Then the users can select a specific book/movie to return to Biblioteca.
 
-Instructions to open your code in Intellij
-==========================================
-1. Go to File -> Open (or Open Project)
-2. Select the directory containing the code
-DONE !
+Once successfully checking out or returning the book/movie, the users will be able to choose the next action they
+want to take from the list displayed above.
 
+The system will not end until the users give the command of EXITING.
